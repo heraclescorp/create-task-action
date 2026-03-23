@@ -26795,6 +26795,12 @@ class RealCoderClient {
       body: JSON.stringify({ input })
     });
   }
+  async resumeTask(ownerUsername, taskId) {
+    const endpoint = `/api/experimental/tasks/${ownerUsername}/${taskId}/resume`;
+    await this.request(endpoint, {
+      method: "POST"
+    });
+  }
   async waitForTaskActive(owner, taskId, logFn, timeoutMs = 120000) {
     const startTime = Date.now();
     const pollIntervalMs = 2000;
@@ -26984,6 +26990,10 @@ class CoderTaskAction {
     const existingTask = await this.coder.getTask(coderUsername, taskName);
     if (existingTask) {
       core.info(`Coder Task: already exists: ${existingTask.name} (id: ${existingTask.id} status: ${existingTask.status})`);
+      if (existingTask.status === "paused") {
+        core.info("Coder Task: task is paused attempting resume.");
+        await this.coder.resumeTask(coderUsername, existingTask.id);
+      }
       core.info(`Coder Task: waiting for task ${existingTask.name} to become active and idle...`);
       await this.coder.waitForTaskActive(coderUsername, existingTask.id, core.debug, 1200000);
       core.info("Coder Task: Sending prompt to existing task...");
