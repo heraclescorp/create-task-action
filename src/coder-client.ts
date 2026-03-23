@@ -212,7 +212,7 @@ export class RealCoderClient implements CoderClient {
 		ownerUsername: string,
 		taskId: TaskId,
 	): Promise<void> {
-		const endpoint = `/api/experimental/tasks/${ownerUsername}/${taskId}/resume`;
+		const endpoint = `/api/v2/tasks/${ownerUsername}/${taskId}/resume`;
 		await this.request<unknown>(endpoint, {
 			method: "POST",
 		});

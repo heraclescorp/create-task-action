@@ -26796,7 +26796,7 @@ class RealCoderClient {
     });
   }
   async resumeTask(ownerUsername, taskId) {
-    const endpoint = `/api/experimental/tasks/${ownerUsername}/${taskId}/resume`;
+    const endpoint = `/api/v2/tasks/${ownerUsername}/${taskId}/resume`;
     await this.request(endpoint, {
       method: "POST"
     });
