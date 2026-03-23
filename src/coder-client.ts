@@ -26,6 +26,8 @@ export interface CoderClient {
 		params: ExperimentalCoderSDKCreateTaskRequest,
 	): Promise<ExperimentalCoderSDKTask>;
 
+	resumeTask(owner: string, taskId: TaskId): Promise<void>;
+
 	sendTaskInput(owner: string, taskId: TaskId, input: string): Promise<void>;
 
 	waitForTaskActive(
@@ -203,6 +205,16 @@ export class RealCoderClient implements CoderClient {
 		await this.request<unknown>(endpoint, {
 			method: "POST",
 			body: JSON.stringify({ input }),
+		});
+	}
+
+	async resumeTask(
+		ownerUsername: string,
+		taskId: TaskId,
+	): Promise<void> {
+		const endpoint = `/api/experimental/tasks/${ownerUsername}/${taskId}/resume`;
+		await this.request<unknown>(endpoint, {
+			method: "POST",
 		});
 	}
 

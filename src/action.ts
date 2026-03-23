@@ -173,6 +173,11 @@ export class CoderTaskAction {
 				`Coder Task: already exists: ${existingTask.name} (id: ${existingTask.id} status: ${existingTask.status})`,
 			);
 
+			if (existingTask.status === 'paused') {
+				core.info('Coder Task: task is paused attempting resume.')
+				await this.coder.resumeTask(coderUsername, existingTask.id)
+			}
+
 			// Wait for task to become active and idle before sending
 			// input. The agent may be in "working" state even when the
 			// task status is "active", and sending input in that state
