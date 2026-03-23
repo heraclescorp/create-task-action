@@ -867,6 +867,7 @@ describe("CoderTaskAction", () => {
 			);
 			coderClient.mockGetTemplateVersionPresets.mockResolvedValue([]);
 			coderClient.mockSendTaskInput.mockResolvedValue(undefined);
+			coderClient.mockWaitForTaskActive.mockResolvedValue(undefined);
 			octokit.rest.issues.listComments.mockResolvedValue({
 				data: [],
 			} as ReturnType<typeof octokit.rest.issues.listComments>);

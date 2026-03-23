@@ -173,18 +173,19 @@ export class CoderTaskAction {
 				`Coder Task: already exists: ${existingTask.name} (id: ${existingTask.id} status: ${existingTask.status})`,
 			);
 
-			// Wait for task to become active if it's not already
-			if (existingTask.status !== "active") {
-				core.info(
-					`Coder Task: waiting for task ${existingTask.name} to become active...`,
-				);
-				await this.coder.waitForTaskActive(
-					coderUsername,
-					existingTask.id,
-					core.debug,
-					1_200_000,
-				);
-			}
+			// Wait for task to become active and idle before sending
+			// input. The agent may be in "working" state even when the
+			// task status is "active", and sending input in that state
+			// causes 409/502 errors.
+			core.info(
+				`Coder Task: waiting for task ${existingTask.name} to become active and idle...`,
+			);
+			await this.coder.waitForTaskActive(
+				coderUsername,
+				existingTask.id,
+				core.debug,
+				1_200_000,
+			);
 
 			core.info("Coder Task: Sending prompt to existing task...");
 			// Send prompt to existing task using the task ID (UUID)
